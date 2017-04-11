@@ -3,7 +3,7 @@
 
 Changes:
 
-* Added queryDocument() function to query single documents.
+* Added querySingleDocument() function to query single documents.
 * Changed output signature of function queryDocuments(). Now "(queryResult)$documents" instead of "(queryResult)$result".
 * MIT license.
 
