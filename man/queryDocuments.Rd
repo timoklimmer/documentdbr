@@ -38,7 +38,7 @@ queryResult <-
     queryText = "SELECT Items.name, Items.description, Items.isComplete FROM Items WHERE Items.isComplete = true",
     maxItemsPerChunk = 100
   )
-str(queryResult$result)
-print(queryResult$result)
+str(queryResult$documents)
+print(queryResult$documents)
 print(queryResult$requestCharge)
 }

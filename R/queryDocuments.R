@@ -22,8 +22,8 @@
 #'     queryText = "SELECT Items.name, Items.description, Items.isComplete FROM Items WHERE Items.isComplete = true",
 #'     maxItemsPerChunk = 100
 #'   )
-#' str(queryResult$result)
-#' print(queryResult$result)
+#' str(queryResult$documents)
+#' print(queryResult$documents)
 #' print(queryResult$requestCharge)
 queryDocuments <-
   function(accountUrl,
@@ -42,7 +42,7 @@ queryDocuments <-
     # query all pages and merge individual results
     isFirstLoop <- TRUE
     msContinuation <- ""
-    totalResult <- data.frame()
+    totalDocuments <- data.frame()
     while (isFirstLoop || !is.null(msContinuation)) {
         # prepare POST call
         currentHttpDate <- httr::http_date(Sys.time())
@@ -90,10 +90,10 @@ queryDocuments <-
             # get intermediate result, request charge and session token and append it to total result
             intermediateResult <- completeResultFromJson$Documents
             intermediateResourceUsage <-
-              if (is.null(totalResult)) {
-                totalResult <- intermediateResult
+              if (is.null(totalDocuments)) {
+                totalDocuments <- intermediateResult
               } else {
-                totalResult <- rbind(totalResult, intermediateResult)
+                totalDocuments <- rbind(totalDocuments, intermediateResult)
             }
             requestCharge <- requestCharge + as.numeric(response$headers$`x-ms-request-charge`)
             sessionToken <- response$headers$`x-ms-session-token`
@@ -108,7 +108,7 @@ queryDocuments <-
 
     # return result
     list(
-        result = totalResult,
+        documents = totalDocuments,
         requestCharge = requestCharge,
         sessionToken = sessionToken
     )

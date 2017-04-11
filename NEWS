@@ -1,0 +1,14 @@
+﻿documentdbr v0.2.0 (Release date: 2017-04-11)
+=============================================
+
+Changes:
+
+* Added queryDocument() function to query single documents.
+* Changed output signature of function queryDocuments(). Now "(queryResult)$documents" instead of "(queryResult)$result".
+* MIT license.
+
+
+documentdbr v0.1.0.9000 (Release date: 2017-04-05)
+==================================================
+
+Initial version.
