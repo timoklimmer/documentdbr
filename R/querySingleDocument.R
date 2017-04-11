@@ -7,7 +7,7 @@
 #' @param documentId The ID of the document to be queried.
 #' @param partitionKey Optional. The partition key value for the document to be read. Must be included if and only if the collection is created with a partitionKey definition.
 #'
-#' @return The result of the query as data.frame object.
+#' @return The result of the query as data.frame object and some information extracted from the REST API response such as request charge and session token.
 #' @export
 #'
 #' @examples

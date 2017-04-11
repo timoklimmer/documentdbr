@@ -7,7 +7,7 @@
 #' @param queryText The SQL query to execute.
 #' @param maxItemsPerChunk Optional. Use it for performance and cost tuning.
 #'
-#' @return The result of the query as data.frame object.
+#' @return The result of the query as data.frame object and some information extracted from the REST API response such as request charge and session token.
 #' @export
 #'
 #' @examples

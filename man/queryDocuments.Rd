@@ -21,7 +21,7 @@ queryDocuments(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
 \item{maxItemsPerChunk}{Optional. Use it for performance and cost tuning.}
 }
 \value{
-The result of the query as data.frame object.
+The result of the query as data.frame object and some information extracted from the REST API response such as request charge and session token.
 }
 \description{
 Queries a collection for documents.
