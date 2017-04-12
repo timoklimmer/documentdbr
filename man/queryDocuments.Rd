@@ -5,7 +5,8 @@
 \title{Queries a collection for documents.}
 \usage{
 queryDocuments(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
-  queryText, maxItemsPerChunk = 100)
+  queryText, enableCrossPartitionQuery = FALSE, partitionKey = "",
+  maxItemsPerChunk = 100)
 }
 \arguments{
 \item{accountUrl}{The URI of the DocumentDB account.}
@@ -17,6 +18,10 @@ queryDocuments(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
 \item{collectionId}{The ID of the collection to query.}
 
 \item{queryText}{The SQL query to execute.}
+
+\item{enableCrossPartitionQuery}{Optional. If the collection is partitioned, this must be set to TRUE to allow execution across multiple partitions. Queries that filter against a single partition key, or against single-partitioned collections do not need to set this parameter. Default value is FALSE.}
+
+\item{partitionKey}{Optional. Needs to be set if the collection is partitioned and the cross partition query option is disabled.}
 
 \item{maxItemsPerChunk}{Optional. Use it for performance and cost tuning.}
 }

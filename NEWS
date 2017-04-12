@@ -1,4 +1,13 @@
-﻿documentdbr v0.2.0 (Release date: 2017-04-11)
+﻿documentdbr v0.3.0 (Release date: 2017-04-11)
+=============================================
+
+Changes:
+
+* Bugfix: Several bugs around partitioned collections.
+* Bugfix: Cannot find function "content" if library httr is not manually loaded.
+
+
+documentdbr v0.2.0 (Release date: 2017-04-11)
 =============================================
 
 Changes:

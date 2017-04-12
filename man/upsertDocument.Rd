@@ -5,7 +5,7 @@
 \title{Inserts or updates the specified JSON document into a collection.}
 \usage{
 upsertDocument(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
-  document)
+  document, partitionKey = "")
 }
 \arguments{
 \item{accountUrl}{The URI of the DocumentDB account.}
@@ -17,6 +17,8 @@ upsertDocument(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
 \item{collectionId}{The ID of the collection to query.}
 
 \item{document}{Either a JSON document (jsonlite) or JSON string denoting the document to add or update.}
+
+\item{partitionKey}{Optional. The partition key value pointing to the partition where the document is (to be) stored.}
 }
 \value{
 Some information extracted from the REST API response such as request charge and session token.

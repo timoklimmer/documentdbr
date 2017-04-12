@@ -46,6 +46,9 @@ deleteDocument <-
           keyType = "master",
           tokenVersion = "1.0"
       )
+      if (partitionKey != "") {
+          partitionKey = paste0("[\"", partitionKey, "\"]")
+      }
 
       # do REST call
       response <- httr::DELETE(
@@ -65,7 +68,7 @@ deleteDocument <-
           # error
           # parse result
           # note: in case the delete was successful, content is empty - thus we need to do the extraction here
-          completeResultFromJson <- jsonlite::fromJSON(content(response, "text", encoding = "UTF-8"))
+          completeResultFromJson <- jsonlite::fromJSON(httr::content(response, "text", encoding = "UTF-8"))
           # stop with an error message
           errorMessage <- paste0(
                 "A ", completeResultFromJson$code, " error occured during DocumentDB querying."

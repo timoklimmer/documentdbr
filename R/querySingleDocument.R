@@ -47,7 +47,10 @@ querySingleDocument <-
         key = primaryOrSecondaryKey,
         keyType = "master",
         tokenVersion = "1.0"
-        )
+    )
+    if (partitionKey != "") {
+        partitionKey = paste0("[\"", partitionKey, "\"]")
+    }
     # do REST call
     response <- httr::GET(
             getUrl,
@@ -64,7 +67,7 @@ querySingleDocument <-
     )
 
     # process response
-    completeResultFromJson <- jsonlite::fromJSON(content(response, "text", encoding = "UTF-8"))
+    completeResultFromJson <- jsonlite::fromJSON(httr::content(response, "text", encoding = "UTF-8"))
     if (floor(response$status_code / 100) != 2) {
         # error
         # stop with an error message

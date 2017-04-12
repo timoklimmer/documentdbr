@@ -5,6 +5,8 @@
 #' @param databaseId The ID of the database to query.
 #' @param collectionId The ID of the collection to query.
 #' @param queryText The SQL query to execute.
+#' @param enableCrossPartitionQuery Optional. If the collection is partitioned, this must be set to TRUE to allow execution across multiple partitions. Queries that filter against a single partition key, or against single-partitioned collections do not need to set this parameter. Default value is FALSE.
+#' @param partitionKey Optional. Needs to be set if the collection is partitioned and the cross partition query option is disabled.
 #' @param maxItemsPerChunk Optional. Use it for performance and cost tuning.
 #'
 #' @return The result of the query as data.frame object and some information extracted from the REST API response such as request charge and session token.
@@ -31,6 +33,8 @@ queryDocuments <-
            databaseId,
            collectionId,
            queryText,
+           enableCrossPartitionQuery = FALSE,
+           partitionKey = "",
            maxItemsPerChunk = 100) {
 
     # initialization
@@ -38,6 +42,10 @@ queryDocuments <-
     postUrl <- paste0(accountUrl, "/", collectionResourceLink, "/docs")
     content <- paste0("{\"query\":\"", queryText, "\"}")
     requestCharge <- 0
+    enableCrossPartitionQuery <- tolower(as.character(enableCrossPartitionQuery))
+    if (partitionKey != "") {
+        partitionKey = paste0("[\"", partitionKey, "\"]")
+    }
 
     # query all pages and merge individual results
     isFirstLoop <- TRUE
@@ -66,16 +74,17 @@ queryDocuments <-
               "x-ms-date" = currentHttpDate,
               "x-ms-version" = "2016-07-11",
               "x-ms-documentdb-isquery" = "True",
-              "x-ms-query-enable-crosspartition" = "true",
+              "x-ms-documentdb-query-enablecrosspartition" = enableCrossPartitionQuery,
               "x-ms-max-item-count" = maxItemsPerChunk,
-              "x-ms-continuation" = msContinuation
+              "x-ms-continuation" = msContinuation,
+              "x-ms-documentdb-partitionkey" = partitionKey
             ),
             body = content
             #, verbose()
           )
 
         # process response
-        completeResultFromJson <- jsonlite::fromJSON(content(response, "text", encoding = "UTF-8"))
+        completeResultFromJson <- jsonlite::fromJSON(httr::content(response, "text", encoding = "UTF-8"))
         if (floor(response$status_code / 100) != 2) {
             # error
             # stop with an error message
