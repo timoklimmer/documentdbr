@@ -13,7 +13,7 @@
 #' @examples
 #' # queries a single document
 #' queryResult <-
-#'   querySingleDocument(
+#'   selectSingleDocument(
 #'     accountUrl = "https://somedocumentdbaccount.documents.azure.com",
 #'     primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
 #'     databaseId = "ToDoList",
@@ -23,7 +23,7 @@
 #' str(queryResult$document)
 #' print(queryResult$document)
 #' print(queryResult$requestCharge)
-querySingleDocument <-
+selectSingleDocument <-
   function(accountUrl,
            primaryOrSecondaryKey,
            databaseId,

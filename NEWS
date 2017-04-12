@@ -3,6 +3,7 @@
 
 Changes:
 
+* Renamed query...() methods to select...() for convenience
 * Bugfix: Several bugs around partitioned collections.
 * Bugfix: Cannot find function "content" if library httr is not manually loaded.
 

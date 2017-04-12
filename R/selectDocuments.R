@@ -16,7 +16,7 @@
 #' # returns the result of a SQL query as data.frame
 #' library(documentdbr)
 #' queryResult <-
-#'   queryDocuments(
+#'   selectDocuments(
 #'     accountUrl = "https://somedocumentdbaccount.documents.azure.com",
 #'     primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
 #'     databaseId = "ToDoList",
@@ -27,7 +27,7 @@
 #' str(queryResult$documents)
 #' print(queryResult$documents)
 #' print(queryResult$requestCharge)
-queryDocuments <-
+selectDocuments <-
   function(accountUrl,
            primaryOrSecondaryKey,
            databaseId,
