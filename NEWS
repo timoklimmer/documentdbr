@@ -1,4 +1,13 @@
-﻿documentdbr v0.3.0 (Release date: 2017-04-11)
+﻿documentdbr v0.4.0 (Release date: 2017-04-12)
+=============================================
+
+Changes:
+
+* Added support for request-level consistency levels.
+* Added support for user agent information.
+
+
+documentdbr v0.3.0 (Release date: 2017-04-11)
 =============================================
 
 Changes:

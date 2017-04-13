@@ -6,7 +6,8 @@
 \usage{
 selectDocuments(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
   queryText, enableCrossPartitionQuery = FALSE, partitionKey = "",
-  maxItemsPerChunk = 100)
+  maxItemsPerChunk = 100, consistencyLevel = "", sessionToken = "",
+  userAgent = "")
 }
 \arguments{
 \item{accountUrl}{The URI of the DocumentDB account.}
@@ -24,6 +25,12 @@ selectDocuments(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
 \item{partitionKey}{Optional. Needs to be set if the collection is partitioned and the cross partition query option is disabled.}
 
 \item{maxItemsPerChunk}{Optional. Use it for performance and cost tuning.}
+
+\item{consistencyLevel}{Optional. The consistency level override. The valid values are: Strong, Bounded, Session, or Eventual (in order of strongest to weakest). The override must be the same or weaker than the account's configured consistency level.}
+
+\item{sessionToken}{Optional. A string token used with session level consistency. For more information, see \href{https://azure.microsoft.com/en-us/documentation/articles/documentdb-consistency-levels}{Using consistency levels in DocumentDB}.}
+
+\item{userAgent}{Optional. A string that specifies the client user agent performing the request. The recommended format is {user agent name}/{version}. For example, the official DocumentDB .NET SDK sets the User-Agent string to Microsoft.Document.Client/1.0.0.0. A custom user-agent could be something like ContosoMarketingApp/1.0.0.}
 }
 \value{
 The result of the query as data.frame object and some information extracted from the REST API response such as request charge and session token.

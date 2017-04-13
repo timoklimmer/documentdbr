@@ -5,7 +5,8 @@
 \title{Inserts or updates the specified JSON document into a collection.}
 \usage{
 upsertDocument(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
-  document, partitionKey = "")
+  document, partitionKey = "", consistencyLevel = "", sessionToken = "",
+  userAgent = "")
 }
 \arguments{
 \item{accountUrl}{The URI of the DocumentDB account.}
@@ -19,6 +20,12 @@ upsertDocument(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
 \item{document}{Either a JSON document (jsonlite) or JSON string denoting the document to add or update.}
 
 \item{partitionKey}{Optional. The partition key value pointing to the partition where the document is (to be) stored.}
+
+\item{consistencyLevel}{Optional. The consistency level override. The valid values are: Strong, Bounded, Session, or Eventual (in order of strongest to weakest). The override must be the same or weaker than the account's configured consistency level.}
+
+\item{sessionToken}{Optional. A string token used with session level consistency. For more information, see \href{https://azure.microsoft.com/en-us/documentation/articles/documentdb-consistency-levels}{Using consistency levels in DocumentDB}.}
+
+\item{userAgent}{Optional. A string that specifies the client user agent performing the request. The recommended format is {user agent name}/{version}. For example, the official DocumentDB .NET SDK sets the User-Agent string to Microsoft.Document.Client/1.0.0.0. A custom user-agent could be something like ContosoMarketingApp/1.0.0.}
 }
 \value{
 Some information extracted from the REST API response such as request charge and session token.

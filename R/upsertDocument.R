@@ -6,6 +6,9 @@
 #' @param collectionId The ID of the collection to query.
 #' @param document Either a JSON document (jsonlite) or JSON string denoting the document to add or update.
 #' @param partitionKey Optional. The partition key value pointing to the partition where the document is (to be) stored.
+#' @param consistencyLevel Optional. The consistency level override. The valid values are: Strong, Bounded, Session, or Eventual (in order of strongest to weakest). The override must be the same or weaker than the account's configured consistency level.
+#' @param sessionToken Optional. A string token used with session level consistency. For more information, see \href{https://azure.microsoft.com/en-us/documentation/articles/documentdb-consistency-levels}{Using consistency levels in DocumentDB}.
+#' @param userAgent Optional. A string that specifies the client user agent performing the request. The recommended format is {user agent name}/{version}. For example, the official DocumentDB .NET SDK sets the User-Agent string to Microsoft.Document.Client/1.0.0.0. A custom user-agent could be something like ContosoMarketingApp/1.0.0.
 #'
 #' @return Some information extracted from the REST API response such as request charge and session token.
 #' @export
@@ -28,7 +31,10 @@ upsertDocument <-
            databaseId,
            collectionId,
            document,
-           partitionKey = "") {
+           partitionKey = "",
+           consistencyLevel = "",
+           sessionToken = "",
+           userAgent = "") {
 
       # initialization
       collectionResourceLink <- paste0("dbs/", databaseId, "/colls/", collectionId)
@@ -62,7 +68,10 @@ upsertDocument <-
                 "x-ms-date" = currentHttpDate,
                 "x-ms-version" = "2016-07-11",
                 "x-ms-documentdb-is-upsert" = "True",
-                "x-ms-documentdb-partitionkey" = partitionKey
+                "x-ms-documentdb-partitionkey" = partitionKey,
+                "x-ms-consistency-level" = consistencyLevel,
+                "x-ms-session-token" = sessionToken,
+                "User-Agent" = userAgent
           ),
           body = document
           #, verbose()

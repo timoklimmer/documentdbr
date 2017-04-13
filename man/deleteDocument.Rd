@@ -5,7 +5,8 @@
 \title{Deletes a document from a collection.}
 \usage{
 deleteDocument(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
-  documentId, partitionKey = "")
+  documentId, partitionKey = "", consistencyLevel = "", sessionToken = "",
+  userAgent = "")
 }
 \arguments{
 \item{accountUrl}{The URI of the DocumentDB account.}
@@ -19,6 +20,12 @@ deleteDocument(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
 \item{documentId}{The ID of the document to delete.}
 
 \item{partitionKey}{Optional. The partition key value for the document to be deleted. Must be included if and only if the collection is created with a partitionKey definition.}
+
+\item{consistencyLevel}{Optional. The consistency level override. The valid values are: Strong, Bounded, Session, or Eventual (in order of strongest to weakest). The override must be the same or weaker than the account's configured consistency level.}
+
+\item{sessionToken}{Optional. A string token used with session level consistency. For more information, see \href{https://azure.microsoft.com/en-us/documentation/articles/documentdb-consistency-levels}{Using consistency levels in DocumentDB}.}
+
+\item{userAgent}{Optional. A string that specifies the client user agent performing the request. The recommended format is {user agent name}/{version}. For example, the official DocumentDB .NET SDK sets the User-Agent string to Microsoft.Document.Client/1.0.0.0. A custom user-agent could be something like ContosoMarketingApp/1.0.0.}
 }
 \value{
 Some information extracted from the REST API response such as request charge and session token.

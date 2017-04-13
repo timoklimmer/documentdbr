@@ -6,6 +6,9 @@
 #' @param collectionId The ID of the collection to query.
 #' @param documentId The ID of the document to delete.
 #' @param partitionKey Optional. The partition key value for the document to be deleted. Must be included if and only if the collection is created with a partitionKey definition.
+#' @param consistencyLevel Optional. The consistency level override. The valid values are: Strong, Bounded, Session, or Eventual (in order of strongest to weakest). The override must be the same or weaker than the account's configured consistency level.
+#' @param sessionToken Optional. A string token used with session level consistency. For more information, see \href{https://azure.microsoft.com/en-us/documentation/articles/documentdb-consistency-levels}{Using consistency levels in DocumentDB}.
+#' @param userAgent Optional. A string that specifies the client user agent performing the request. The recommended format is {user agent name}/{version}. For example, the official DocumentDB .NET SDK sets the User-Agent string to Microsoft.Document.Client/1.0.0.0. A custom user-agent could be something like ContosoMarketingApp/1.0.0.
 #'
 #' @return Some information extracted from the REST API response such as request charge and session token.
 #' @export
@@ -28,7 +31,10 @@ deleteDocument <-
            databaseId,
            collectionId,
            documentId,
-           partitionKey = "") {
+           partitionKey = "",
+           consistencyLevel = "",
+           sessionToken = "",
+           userAgent = "") {
 
       # initialization
       collectionResourceLink <- paste0("dbs/", databaseId, "/colls/", collectionId, "/docs", "/", documentId)
@@ -58,7 +64,10 @@ deleteDocument <-
             "authorization" = authorizationToken,
             "x-ms-date" = currentHttpDate,
             "x-ms-version" = "2016-07-11",
-            "x-ms-documentdb-partitionkey" = partitionKey
+            "x-ms-documentdb-partitionkey" = partitionKey,
+            "x-ms-consistency-level" = consistencyLevel,
+            "x-ms-session-token" = sessionToken,
+            "User-Agent" = userAgent
           )
           #, verbose()
       )
