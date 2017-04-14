@@ -1,4 +1,12 @@
-﻿documentdbr v0.5.0 (Release date: 2017-04-12)
+﻿documentdbr v0.5.1 (Release date: 2017-04-13)
+=============================================
+
+Changes:
+
+* Bugfix: Some queries need extra escaping to work.
+
+
+documentdbr v0.5.0 (Release date: 2017-04-12)
 =============================================
 
 Changes:

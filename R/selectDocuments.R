@@ -46,7 +46,7 @@ selectDocuments <-
     # initialization
     collectionResourceLink <- paste0("dbs/", databaseId, "/colls/", collectionId)
     postUrl <- paste0(accountUrl, "/", collectionResourceLink, "/docs")
-    content <- paste0("{\"query\":\"", queryText, "\"}")
+    content <- paste0("{\"query\":\"", escapeTextForJson(queryText), "\"}")
     requestCharge <- 0
     enableCrossPartitionQuery <- tolower(as.character(enableCrossPartitionQuery))
     if (partitionKey != "") {
