@@ -52,7 +52,9 @@ upsertDocument <-
           keyType = "master",
           tokenVersion = "1.0"
         )
-      if (partitionKey != "") {
+      if (length(partitionKey) != 0 && partitionKey != "") {
+          partitionKey = paste0("[\"", partitionKey, "\"]")
+      }
           partitionKey = paste0("[\"", partitionKey, "\"]")
       }
 
