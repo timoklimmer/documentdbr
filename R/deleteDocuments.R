@@ -2,10 +2,7 @@
 #'
 #' Note: As this function deletes each document one by one, it can take very long to do the deletions. In some cases, it is a better approach to delete and recreate the collection.
 #'
-#' @param accountUrl The URI of the DocumentDB account.
-#' @param primaryOrSecondaryKey The master key to authenticate.
-#' @param databaseId The ID of the database to modify.
-#' @param collectionId The ID of the collection to modify.
+#' @param connectionInfo A DocumentDB connection info object generated with getDocumentDbConnectionInfo().
 #' @param predicate Optional. The predicate which has to be satisfied. Example: "c.machineId IN ('Machine 1', 'Machine 2')" deletes all documents of machine 1 and 2. Default is "", ie. all documents in the collection are deleted.
 #' @param partitionKey Optional. Can be used to limit the operation to a certain partition.
 #' @param consistencyLevel Optional. The consistency level override. The valid values are: Strong, Bounded, Session, or Eventual (in order of strongest to weakest). The override must be the same or weaker than the account's configured consistency level.
@@ -16,31 +13,26 @@
 #' @export
 #'
 #' @examples
+#' # load the documentdbr package
 #' library(documentdbr)
 #' 
-#' # deletes all documents from the collection
-#' deleteResult <- deleteDocuments(
+#' # get a DocumentDbConnectionInfo object
+#' myCollection <- getDocumentDbConnectionInfo(
 #'   accountUrl = "https://somedocumentdbaccount.documents.azure.com",
 #'   primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
 #'   databaseId = "MyDatabaseId",
 #'   collectionId = "MyCollectionId"
 #' )
+#' 
+#' # delete all documents from the collection and print the request charge
+#' deleteResult <- deleteDocuments(myCollection)
 #' print(deleteResult$requestCharge)
 #' 
-#' # deletes all documents where value1 is < 0.5
-#' deleteResult <- deleteDocuments(
-#'   accountUrl = "https://somedocumentdbaccount.documents.azure.com",
-#'   primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-#'   databaseId = "ToDoList",
-#'   collectionId = "PerfTest",
-#'   predicate = "c.value1 < 0.5"
-#' )
+#' # delete all documents where value1 is < 0.5 and print the request charge
+#' deleteResult <- deleteDocuments(myCollection, predicate = "c.value1 < 0.5")
 #' print(deleteResult$requestCharge)
 deleteDocuments <- function(
-  accountUrl,
-  primaryOrSecondaryKey,
-  databaseId,
-  collectionId,
+  connectionInfo,
   predicate = "",
   partitionKey = "",
   consistencyLevel = "",
@@ -55,18 +47,16 @@ deleteDocuments <- function(
     while (needsAnotherLoop) {
         # get the ids of the next 1000 documents to delete
         idQueryText <- "SELECT TOP 1000 c.id FROM c"
-        if (predicate != "") {
+        if (length(predicate) != 0 && predicate != "") {
             idQueryText <- paste(idQueryText, "WHERE", predicate)
         }
-        if (partitionKey != "") {
+        if (length(partitionKey) != 0 && partitionKey != "") {
             enableCrossPartitionQuery <- FALSE;
         } else {
             enableCrossPartitionQuery <- TRUE;
         }
-        idQueryResult <- selectDocuments(accountUrl,
-            primaryOrSecondaryKey = primaryOrSecondaryKey,
-            databaseId = databaseId,
-            collectionId = collectionId,
+        idQueryResult <- selectDocuments(
+            connectionInfo = connectionInfo,
             queryText = idQueryText,
             enableCrossPartitionQuery = enableCrossPartitionQuery,
             partitionKey = partitionKey,
@@ -87,10 +77,7 @@ deleteDocuments <- function(
         for (id in sapply(idQueryResult$documents[, "id"], format, scientific = FALSE)) {
             # do the delete
             deletionResult <- deleteDocument(
-                accountUrl = accountUrl,
-                primaryOrSecondaryKey = primaryOrSecondaryKey,
-                databaseId = databaseId,
-                collectionId = collectionId,
+                connectionInfo = connectionInfo,
                 documentId = id,
                 partitionKey = partitionKey,
                 consistencyLevel = consistencyLevel,

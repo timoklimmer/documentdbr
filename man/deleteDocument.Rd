@@ -4,18 +4,11 @@
 \alias{deleteDocument}
 \title{Deletes a single document from a collection.}
 \usage{
-deleteDocument(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
-  documentId, partitionKey = "", consistencyLevel = "", sessionToken = "",
-  userAgent = "")
+deleteDocument(connectionInfo, documentId, partitionKey = "",
+  consistencyLevel = "", sessionToken = "", userAgent = "")
 }
 \arguments{
-\item{accountUrl}{The URI of the DocumentDB account.}
-
-\item{primaryOrSecondaryKey}{The master key to authenticate.}
-
-\item{databaseId}{The ID of the database to query.}
-
-\item{collectionId}{The ID of the collection to query.}
+\item{connectionInfo}{A DocumentDB connection info object generated with getDocumentDbConnectionInfo().}
 
 \item{documentId}{The ID of the document to delete.}
 
@@ -34,15 +27,20 @@ Some information extracted from the REST API response such as request charge and
 Deletes a single document from a collection.
 }
 \examples{
-# deletes the document with id fe7718ad-0000-4f42-cf5a-e2d79d2156df
+# load the documentdbr package
 library(documentdbr)
-deleteResult <-
-  deleteDocument(
-    accountUrl = "https://somedocumentdbaccount.documents.azure.com",
-    primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-    databaseId = "MyDatabaseId",
-    collectionId = "MyCollectionId",
-    documentId = "fe7718ad-0000-4f42-cf5a-e2d79d2156df"
-  )
+
+# get a DocumentDbConnectionInfo object
+myCollection <- getDocumentDbConnectionInfo(
+  accountUrl = "https://somedocumentdbaccount.documents.azure.com",
+  primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
+  databaseId = "MyDatabaseId",
+  collectionId = "MyCollectionId"
+)
+
+# delete the document with id fe7718ad-0000-4f42-cf5a-e2d79d2156df
+deleteResult <- deleteDocument(myCollection, documentId = "fe7718ad-0000-4f42-cf5a-e2d79d2156df")
+
+# print the request charge
 print(deleteResult$requestCharge)
 }

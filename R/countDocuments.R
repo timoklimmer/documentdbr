@@ -1,9 +1,6 @@
 #' Counts documents in a collection, either all or only those which satisfy a specified predicate.
 #'
-#' @param accountUrl The URI of the DocumentDB account.
-#' @param primaryOrSecondaryKey The master key to authenticate.
-#' @param databaseId The ID of the database to query.
-#' @param collectionId The ID of the collection to query.
+#' @param connectionInfo A DocumentDB connection info object generated with getDocumentDbConnectionInfo().
 #' @param predicate Optional. The predicate which has to be satisfied. Example: "c.machineId IN ('Machine 1', 'Machine 2')" counts all documents of machine 1 and 2. Default is "", ie. all documents in the collection are counted.
 #' @param partitionKey Optional. Can be used to limit the operation to a certain partition.
 #' @param consistencyLevel Optional. The consistency level override. The valid values are: Strong, Bounded, Session, or Eventual (in order of strongest to weakest). The override must be the same or weaker than the account's configured consistency level.
@@ -17,30 +14,23 @@
 #' # load the documentdbr package
 #' library(documentdbr)
 #' 
-#' # count all documents in the collection
-#' queryResult <- countDocuments(
-#'      accountUrl = "https://somedocumentdbaccount.documents.azure.com",
-#'      primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-#'      databaseId = "MyDatabaseId",
-#'      collectionId = "MyCollectionId"
+#' # get a DocumentDbConnectionInfo object
+#' myCollection <- getDocumentDbConnectionInfo(
+#'   accountUrl = "https://somedocumentdbaccount.documents.azure.com",
+#'   primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
+#'   databaseId = "MyDatabaseId",
+#'   collectionId = "MyCollectionId"
 #' )
+#'
+#' # count all documents in the collection
+#' queryResult <- countDocuments(myCollection)
 #' cat(paste("The collection has", as.numeric(queryResult$count), "documents.\n"))
 #'
-#' 
 #' # count all documents where value1 < 0.5
-#' queryResult <- countDocuments(
-#'      accountUrl = "https://somedocumentdbaccount.documents.azure.com",
-#'      primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-#'      databaseId = "MyDatabaseId",
-#'      collectionId = "MyCollectionId",
-#'      predicate = "c.value1 < 0.5",
-#' )
+#' queryResult <- countDocuments(myCollection, predicate = "c.value1 < 0.5")
 #' cat(paste("In", as.numeric(queryResult$count), "documents value1 is < 0.5."))
 countDocuments <-
-  function(accountUrl,
-           primaryOrSecondaryKey,
-           databaseId,
-           collectionId,
+  function(connectionInfo,
            predicate = "",
            partitionKey = "",
            consistencyLevel = "",
@@ -50,11 +40,11 @@ countDocuments <-
       # prepare query
       # queryText
       queryText <- "SELECT count(c.id) FROM c"
-      if (predicate != "") {
+      if (length(predicate) != 0 && predicate != "") {
           queryText <- paste(queryText, "WHERE", predicate)
       }
       # enableCrossPartitionQuery
-      if (partitionKey != "") {
+      if (length(partitionKey) != 0 && partitionKey != "") {
           enableCrossPartitionQuery <- FALSE;
       } else {
           enableCrossPartitionQuery <- TRUE;
@@ -62,10 +52,7 @@ countDocuments <-
 
       # run query
       queryResult <- selectDocuments(
-              accountUrl = accountUrl,
-              primaryOrSecondaryKey = primaryOrSecondaryKey,
-              databaseId = databaseId,
-              collectionId = collectionId,
+              connectionInfo = connectionInfo,
               queryText = queryText,
               enableCrossPartitionQuery = enableCrossPartitionQuery,
               partitionKey = partitionKey,
@@ -74,9 +61,15 @@ countDocuments <-
               userAgent = userAgent
           )
 
+      # determine count
+      count <- as.numeric(queryResult$documents)
+      if (length(count) == 0) {
+          count <- 0
+      }
+
       # return result
       list(
-        count = as.numeric(queryResult$documents),
+        count = count,
         requestCharge = queryResult$requestCharge,
         sessionToken = queryResult$sessionToken
     )

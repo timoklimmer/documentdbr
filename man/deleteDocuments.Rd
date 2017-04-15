@@ -4,18 +4,11 @@
 \alias{deleteDocuments}
 \title{Deletes documents in a collection, either all or only those which satisfy a specified predicate.}
 \usage{
-deleteDocuments(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
-  predicate = "", partitionKey = "", consistencyLevel = "",
-  sessionToken = "", userAgent = "")
+deleteDocuments(connectionInfo, predicate = "", partitionKey = "",
+  consistencyLevel = "", sessionToken = "", userAgent = "")
 }
 \arguments{
-\item{accountUrl}{The URI of the DocumentDB account.}
-
-\item{primaryOrSecondaryKey}{The master key to authenticate.}
-
-\item{databaseId}{The ID of the database to modify.}
-
-\item{collectionId}{The ID of the collection to modify.}
+\item{connectionInfo}{A DocumentDB connection info object generated with getDocumentDbConnectionInfo().}
 
 \item{predicate}{Optional. The predicate which has to be satisfied. Example: "c.machineId IN ('Machine 1', 'Machine 2')" deletes all documents of machine 1 and 2. Default is "", ie. all documents in the collection are deleted.}
 
@@ -34,24 +27,22 @@ Some information extracted from the REST API responses such as (aggregated) requ
 Note: As this function deletes each document one by one, it can take very long to do the deletions. In some cases, it is a better approach to delete and recreate the collection.
 }
 \examples{
+# load the documentdbr package
 library(documentdbr)
 
-# deletes all documents from the collection
-deleteResult <- deleteDocuments(
+# get a DocumentDbConnectionInfo object
+myCollection <- getDocumentDbConnectionInfo(
   accountUrl = "https://somedocumentdbaccount.documents.azure.com",
   primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
   databaseId = "MyDatabaseId",
   collectionId = "MyCollectionId"
 )
+
+# delete all documents from the collection and print the request charge
+deleteResult <- deleteDocuments(myCollection)
 print(deleteResult$requestCharge)
 
-# deletes all documents where value1 is < 0.5
-deleteResult <- deleteDocuments(
-  accountUrl = "https://somedocumentdbaccount.documents.azure.com",
-  primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-  databaseId = "ToDoList",
-  collectionId = "PerfTest",
-  predicate = "c.value1 < 0.5"
-)
+# delete all documents where value1 is < 0.5 and print the request charge
+deleteResult <- deleteDocuments(myCollection, predicate = "c.value1 < 0.5")
 print(deleteResult$requestCharge)
 }

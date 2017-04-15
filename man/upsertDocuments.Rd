@@ -4,18 +4,11 @@
 \alias{upsertDocuments}
 \title{Interprets the rows in a specified data.frame as documents and upserts those documents.}
 \usage{
-upsertDocuments(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
-  documentsDataFrame, partitionKeyColumn = "", consistencyLevel = "",
-  sessionToken = "", userAgent = "")
+upsertDocuments(connectionInfo, documentsDataFrame, partitionKeyColumn = "",
+  consistencyLevel = "", sessionToken = "", userAgent = "")
 }
 \arguments{
-\item{accountUrl}{The URI of the DocumentDB account.}
-
-\item{primaryOrSecondaryKey}{The master key to authenticate.}
-
-\item{databaseId}{The ID of the database to modify.}
-
-\item{collectionId}{The ID of the collection to modify.}
+\item{connectionInfo}{A DocumentDB connection info object generated with getDocumentDbConnectionInfo().}
 
 \item{documentsDataFrame}{A data.frame containing the documents. Ensure that the data.frame has an id column.}
 
@@ -34,6 +27,17 @@ Some information extracted from the REST API response such as request charge and
 Interprets the rows in a specified data.frame as documents and upserts those documents.
 }
 \examples{
+# load the documentdbr package
+library(documentdbr)
+
+# get a DocumentDbConnectionInfo object
+myCollection <- getDocumentDbConnectionInfo(
+  accountUrl = "https://somedocumentdbaccount.documents.azure.com",
+  primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
+  databaseId = "MyDatabaseId",
+  collectionId = "MyCollectionId"
+)
+
 # create a data.frame with dummy data
 someDataFrame <- data.frame(
   id = 1:10,
@@ -43,14 +47,7 @@ someDataFrame <- data.frame(
   value3 = rnorm(10, 0, 1)
 )
 
-# upsert the data.frame
-library(documentdbr)
-upsertResult <-
-   upsertDocuments(
-     accountUrl = "https://somedocumentdbaccount.documents.azure.com",
-     primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-     databaseId = "MyDatabaseId",
-     collectionId = "MyCollectionId",
-     documentsDataFrame = someDataFrame
-   )
+# upsert the data.frame and print the request charge
+upsertResult <- upsertDocuments(myCollection, someDataFrame)
+print(upsertResult$requestCharge)
 }

@@ -1,9 +1,6 @@
 #' Deletes a single document from a collection.
 #'
-#' @param accountUrl The URI of the DocumentDB account.
-#' @param primaryOrSecondaryKey The master key to authenticate.
-#' @param databaseId The ID of the database to query.
-#' @param collectionId The ID of the collection to query.
+#' @param connectionInfo A DocumentDB connection info object generated with getDocumentDbConnectionInfo().
 #' @param documentId The ID of the document to delete.
 #' @param partitionKey Optional. The partition key value for the document to be deleted. Must be included if and only if the collection is created with a partitionKey definition.
 #' @param consistencyLevel Optional. The consistency level override. The valid values are: Strong, Bounded, Session, or Eventual (in order of strongest to weakest). The override must be the same or weaker than the account's configured consistency level.
@@ -14,22 +11,24 @@
 #' @export
 #'
 #' @examples
-#' # deletes the document with id fe7718ad-0000-4f42-cf5a-e2d79d2156df
+#' # load the documentdbr package
 #' library(documentdbr)
-#' deleteResult <-
-#'   deleteDocument(
-#'     accountUrl = "https://somedocumentdbaccount.documents.azure.com",
-#'     primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-#'     databaseId = "MyDatabaseId",
-#'     collectionId = "MyCollectionId",
-#'     documentId = "fe7718ad-0000-4f42-cf5a-e2d79d2156df"
-#'   )
+#' 
+#' # get a DocumentDbConnectionInfo object
+#' myCollection <- getDocumentDbConnectionInfo(
+#'   accountUrl = "https://somedocumentdbaccount.documents.azure.com",
+#'   primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
+#'   databaseId = "MyDatabaseId",
+#'   collectionId = "MyCollectionId"
+#' )
+#'
+#' # delete the document with id fe7718ad-0000-4f42-cf5a-e2d79d2156df
+#' deleteResult <- deleteDocument(myCollection, documentId = "fe7718ad-0000-4f42-cf5a-e2d79d2156df")
+#'
+#' # print the request charge
 #' print(deleteResult$requestCharge)
 deleteDocument <-
-  function(accountUrl,
-           primaryOrSecondaryKey,
-           databaseId,
-           collectionId,
+  function(connectionInfo,
            documentId,
            partitionKey = "",
            consistencyLevel = "",
@@ -37,8 +36,8 @@ deleteDocument <-
            userAgent = "") {
 
       # initialization
-      collectionResourceLink <- paste0("dbs/", databaseId, "/colls/", collectionId, "/docs", "/", documentId)
-      deleteUrl <- paste0(accountUrl, "/", collectionResourceLink)
+      collectionResourceLink <- paste0("dbs/", connectionInfo$databaseId, "/colls/", connectionInfo$collectionId, "/docs", "/", documentId)
+      deleteUrl <- paste0(connectionInfo$accountUrl, "/", collectionResourceLink)
       requestCharge <- 0
 
       # prepare DELETE call
@@ -48,11 +47,11 @@ deleteDocument <-
           resourceType = "docs",
           resourceLink = collectionResourceLink,
           date = currentHttpDate,
-          key = primaryOrSecondaryKey,
+          key = connectionInfo$primaryOrSecondaryKey,
           keyType = "master",
           tokenVersion = "1.0"
       )
-      if (partitionKey != "") {
+      if (length(partitionKey) != 0 && partitionKey != "") {
           partitionKey = paste0("[\"", partitionKey, "\"]")
       }
 

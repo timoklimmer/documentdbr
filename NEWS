@@ -1,4 +1,13 @@
-﻿documentdbr v0.6.1 (Release date: 2017-04-14)
+﻿documentdbr v0.7.0 (Release date: 2017-04-14)
+=============================================
+
+Changes:
+
+* Introducing DocumentDB connection info objects to reduce the amount of code that has to be written.
+  Usage should be much more convenient now. See examples for usage.
+
+
+documentdbr v0.6.1 (Release date: 2017-04-14)
 =============================================
 
 Changes:
@@ -12,8 +21,10 @@ documentdbr v0.6.0 (Release date: 2017-04-14)
 Changes:
 
 * Added function upsertDocuments() to upsert multiple documents via data.frame.
-* Added function countDocuments() to count either all documents in a collection or certain documents satisfying a specified predicate.
-* Added function deleteDocuments() to delete either all documents in a collection or certain documents satisfying a specified predicate.
+* Added function countDocuments() to count either all documents in a collection or certain documents
+  satisfying a specified predicate.
+* Added function deleteDocuments() to delete either all documents in a collection or certain documents
+  satisfying a specified predicate.
 * Renamed selectSingleDocument() to getDocument().
 * Smaller documentation modifications.
 

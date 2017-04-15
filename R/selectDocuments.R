@@ -1,9 +1,6 @@
 #' Runs a SELECT query on a collection and returns its result as data.frame.
 #'
-#' @param accountUrl The URI of the DocumentDB account.
-#' @param primaryOrSecondaryKey The master key to authenticate.
-#' @param databaseId The ID of the database to query.
-#' @param collectionId The ID of the collection to query.
+#' @param connectionInfo A DocumentDB connection info object generated with getDocumentDbConnectionInfo().
 #' @param queryText The SQL query to execute.
 #' @param enableCrossPartitionQuery Optional. If the collection is partitioned, this must be set to TRUE to allow execution across multiple partitions. Queries that filter against a single partition key, or against single-partitioned collections do not need to set this parameter. Default value is FALSE.
 #' @param partitionKey Optional. Needs to be set if the collection is partitioned and the cross partition query option is disabled.
@@ -16,38 +13,28 @@
 #' @export
 #'
 #' @examples
-#' # returns the result of a SQL query as data.frame
+#' # load the documentdbr package
 #' library(documentdbr)
-#' queryResult <-
-#'   selectDocuments(
-#'     accountUrl = "https://somedocumentdbaccount.documents.azure.com",
-#'     primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-#'     databaseId = "MyDatabaseId",
-#'     collectionId = "MyCollectionId",
-#'     queryText = "SELECT Items.name, Items.description, Items.isComplete FROM Items WHERE Items.isComplete = true",
-#'     maxItemsPerChunk = 100
-#'   )
+#' 
+#' # get a DocumentDbConnectionInfo object
+#' myCollection <- getDocumentDbConnectionInfo(
+#'   accountUrl = "https://somedocumentdbaccount.documents.azure.com",
+#'   primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
+#'   databaseId = "MyDatabaseId",
+#'   collectionId = "MyCollectionId"
+#' )
+#'
+#' # run a SQL query, get its result as as data.frame and print some infos
+#' queryResult <- selectDocuments(myCollection, "SELECT Items.name, Items.description, Items.isComplete FROM Items WHERE Items.isComplete = true")
 #' str(queryResult$documents)
 #' print(queryResult$documents)
 #' print(queryResult$requestCharge)
 #' 
-#' # returns the sum of all value1 fields
-#' library(documentdbr)
-#' anotherQueryResult <-
-#'  selectDocuments(
-#'    accountUrl = "https://somedocumentdbaccount.documents.azure.com",
-#'    primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-#'    databaseId = "MyDatabaseId",
-#'    collectionId = "MyCollectionId",
-#'    queryText = "SELECT sum(c.value1) AS TotalSumValue1 FROM c"
-#'  )
-#' totalSumValue1 <- as.numeric(anotherQueryResult$documents)
-#' print(paste("The total sum over all value1 fields is:", totalSumValue1))
+#' # run another SQL query, this time getting the sum of all value1 fields
+#' anotherQueryResult <- selectDocuments(myCollection, "SELECT sum(c.value1) AS TotalSumValue1 FROM c")
+#' print(paste("The total sum over all value1 fields is:", as.numeric(anotherQueryResult$documents)))
 selectDocuments <-
-  function(accountUrl,
-           primaryOrSecondaryKey,
-           databaseId,
-           collectionId,
+  function(connectionInfo,
            queryText,
            enableCrossPartitionQuery = FALSE,
            partitionKey = "",
@@ -57,12 +44,12 @@ selectDocuments <-
            userAgent = "") {
 
     # initialization
-    collectionResourceLink <- paste0("dbs/", databaseId, "/colls/", collectionId)
-    postUrl <- paste0(accountUrl, "/", collectionResourceLink, "/docs")
+    collectionResourceLink <- paste0("dbs/", connectionInfo$databaseId, "/colls/", connectionInfo$collectionId)
+    postUrl <- paste0(connectionInfo$accountUrl, "/", collectionResourceLink, "/docs")
     content <- paste0("{\"query\":\"", escapeTextForJson(queryText), "\"}")
     requestCharge <- 0
     enableCrossPartitionQuery <- tolower(as.character(enableCrossPartitionQuery))
-    if (partitionKey != "") {
+    if (length(partitionKey) != 0 && partitionKey != "") {
         partitionKey = paste0("[\"", partitionKey, "\"]")
     }
 
@@ -78,7 +65,7 @@ selectDocuments <-
             resourceType = "docs",
             resourceLink = collectionResourceLink,
             date = currentHttpDate,
-            key = primaryOrSecondaryKey,
+            key = connectionInfo$primaryOrSecondaryKey,
             keyType = "master",
             tokenVersion = "1.0"
           )

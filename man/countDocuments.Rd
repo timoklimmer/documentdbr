@@ -4,18 +4,11 @@
 \alias{countDocuments}
 \title{Counts documents in a collection, either all or only those which satisfy a specified predicate.}
 \usage{
-countDocuments(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
-  predicate = "", partitionKey = "", consistencyLevel = "",
-  sessionToken = "", userAgent = "")
+countDocuments(connectionInfo, predicate = "", partitionKey = "",
+  consistencyLevel = "", sessionToken = "", userAgent = "")
 }
 \arguments{
-\item{accountUrl}{The URI of the DocumentDB account.}
-
-\item{primaryOrSecondaryKey}{The master key to authenticate.}
-
-\item{databaseId}{The ID of the database to query.}
-
-\item{collectionId}{The ID of the collection to query.}
+\item{connectionInfo}{A DocumentDB connection info object generated with getDocumentDbConnectionInfo().}
 
 \item{predicate}{Optional. The predicate which has to be satisfied. Example: "c.machineId IN ('Machine 1', 'Machine 2')" counts all documents of machine 1 and 2. Default is "", ie. all documents in the collection are counted.}
 
@@ -37,23 +30,19 @@ Counts documents in a collection, either all or only those which satisfy a speci
 # load the documentdbr package
 library(documentdbr)
 
-# count all documents in the collection
-queryResult <- countDocuments(
-     accountUrl = "https://somedocumentdbaccount.documents.azure.com",
-     primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-     databaseId = "MyDatabaseId",
-     collectionId = "MyCollectionId"
+# get a DocumentDbConnectionInfo object
+myCollection <- getDocumentDbConnectionInfo(
+  accountUrl = "https://somedocumentdbaccount.documents.azure.com",
+  primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
+  databaseId = "MyDatabaseId",
+  collectionId = "MyCollectionId"
 )
+
+# count all documents in the collection
+queryResult <- countDocuments(myCollection)
 cat(paste("The collection has", as.numeric(queryResult$count), "documents.\\n"))
 
-
 # count all documents where value1 < 0.5
-queryResult <- countDocuments(
-     accountUrl = "https://somedocumentdbaccount.documents.azure.com",
-     primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-     databaseId = "MyDatabaseId",
-     collectionId = "MyCollectionId",
-     predicate = "c.value1 < 0.5",
-)
+queryResult <- countDocuments(myCollection, predicate = "c.value1 < 0.5")
 cat(paste("In", as.numeric(queryResult$count), "documents value1 is < 0.5."))
 }

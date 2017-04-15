@@ -4,18 +4,11 @@
 \alias{upsertDocument}
 \title{Inserts or updates the specified JSON document into a collection.}
 \usage{
-upsertDocument(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
-  document, partitionKey = "", consistencyLevel = "", sessionToken = "",
-  userAgent = "")
+upsertDocument(connectionInfo, document, partitionKey = "",
+  consistencyLevel = "", sessionToken = "", userAgent = "")
 }
 \arguments{
-\item{accountUrl}{The URI of the DocumentDB account.}
-
-\item{primaryOrSecondaryKey}{The master key to authenticate.}
-
-\item{databaseId}{The ID of the database to modify.}
-
-\item{collectionId}{The ID of the collection to modify.}
+\item{connectionInfo}{A DocumentDB connection info object generated with getDocumentDbConnectionInfo().}
 
 \item{document}{Either a JSON document (jsonlite) or JSON string denoting the document to add or update.}
 
@@ -34,15 +27,18 @@ Some information extracted from the REST API response such as request charge and
 Inserts or updates the specified JSON document into a collection.
 }
 \examples{
-# inserts a document if not existing yet, otherwise updates it
+# load the documentdbr package
 library(documentdbr)
-upsertResult <-
-  upsertDocument(
-    accountUrl = "https://somedocumentdbaccount.documents.azure.com",
-    primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-    databaseId = "MyDatabaseId",
-    collectionId = "MyCollectionId",
-    document = toJSON("{\\"id\\": \\"fe7718ad-0000-4f42-cf5a-e2d79d2156df\\", \\"Value\\": \\"126\\"}")
-  )
+
+# get a DocumentDbConnectionInfo object
+myCollection <- getDocumentDbConnectionInfo(
+  accountUrl = "https://somedocumentdbaccount.documents.azure.com",
+  primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
+  databaseId = "MyDatabaseId",
+  collectionId = "MyCollectionId"
+)
+
+# upsert a document and print the request charge
+upsertResult <- upsertDocument(myCollection, "{\\"id\\": \\"fe7718ad-0000-4f42-cf5a-e2d79d2156df\\", \\"Value\\": \\"126\\"}")
 print(upsertResult$requestCharge)
 }

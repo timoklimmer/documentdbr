@@ -4,18 +4,11 @@
 \alias{getDocument}
 \title{Gets a single document from a collection.}
 \usage{
-getDocument(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
-  documentId, partitionKey = "", consistencyLevel = "", sessionToken = "",
-  userAgent = "")
+getDocument(connectionInfo, documentId, partitionKey = "",
+  consistencyLevel = "", sessionToken = "", userAgent = "")
 }
 \arguments{
-\item{accountUrl}{The URI of the DocumentDB account.}
-
-\item{primaryOrSecondaryKey}{The master key to authenticate.}
-
-\item{databaseId}{The ID of the database to query.}
-
-\item{collectionId}{The ID of the collection to query.}
+\item{connectionInfo}{A DocumentDB connection info object generated with getDocumentDbConnectionInfo().}
 
 \item{documentId}{The ID of the document to be queried.}
 
@@ -34,16 +27,22 @@ The result of the query as data.frame object and some information extracted from
 Gets a single document from a collection.
 }
 \examples{
-# gets a single document with a specified id
-getResult <-
-  getDocument(
-    accountUrl = "https://somedocumentdbaccount.documents.azure.com",
-    primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-    databaseId = "MyDatabaseId",
-    collectionId = "MyCollectionId",
-    documentId = "3c7718ab-858b-4f42-bf5a-e2d79d2156de"
-  )
+# load the documentdbr package
+library(documentdbr)
+
+# get a DocumentDbConnectionInfo object
+myCollection <- getDocumentDbConnectionInfo(
+  accountUrl = "https://somedocumentdbaccount.documents.azure.com",
+  primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
+  databaseId = "MyDatabaseId",
+  collectionId = "MyCollectionId"
+)
+
+# get a single document with a specific id and print some infos about it
+getResult <- getDocument(myCollection, documentId = "3c7718ab-858b-4f42-bf5a-e2d79d2156de")
 str(getResult$document)
 print(getResult$document)
+
+# print request charge
 print(getResult$requestCharge)
 }
