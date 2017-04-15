@@ -1,4 +1,12 @@
-﻿documentdbr v0.6.0 (Release date: 2017-04-14)
+﻿documentdbr v0.6.1 (Release date: 2017-04-14)
+=============================================
+
+Changes:
+
+* Bugfix: upsertDocuments() not working with partitioned collections.
+
+
+documentdbr v0.6.0 (Release date: 2017-04-14)
 =============================================
 
 Changes:

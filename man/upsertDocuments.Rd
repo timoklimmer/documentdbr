@@ -5,7 +5,7 @@
 \title{Interprets the rows in a specified data.frame as documents and upserts those documents.}
 \usage{
 upsertDocuments(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
-  documentsDataFrame, partitionKey = "", consistencyLevel = "",
+  documentsDataFrame, partitionKeyColumn = "", consistencyLevel = "",
   sessionToken = "", userAgent = "")
 }
 \arguments{
@@ -19,7 +19,7 @@ upsertDocuments(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
 
 \item{documentsDataFrame}{A data.frame containing the documents. Ensure that the data.frame has an id column.}
 
-\item{partitionKey}{Optional. The partition key value pointing to the partition where the documents are (to be) stored.}
+\item{partitionKeyColumn}{Optional. Name of the column which contains the partition key. The partition key points to the partition where the documents are (to be) stored.}
 
 \item{consistencyLevel}{Optional. The consistency level override. The valid values are: Strong, Bounded, Session, or Eventual (in order of strongest to weakest). The override must be the same or weaker than the account's configured consistency level.}
 

@@ -5,7 +5,7 @@
 #' @param databaseId The ID of the database to modify.
 #' @param collectionId The ID of the collection to modify.
 #' @param documentsDataFrame A data.frame containing the documents. Ensure that the data.frame has an id column.
-#' @param partitionKey Optional. The partition key value pointing to the partition where the documents are (to be) stored.
+#' @param partitionKeyColumn Optional. Name of the column which contains the partition key. The partition key points to the partition where the documents are (to be) stored.
 #' @param consistencyLevel Optional. The consistency level override. The valid values are: Strong, Bounded, Session, or Eventual (in order of strongest to weakest). The override must be the same or weaker than the account's configured consistency level.
 #' @param sessionToken Optional. A string token used with session level consistency. For more information, see \href{https://azure.microsoft.com/en-us/documentation/articles/documentdb-consistency-levels}{Using consistency levels in DocumentDB}.
 #' @param userAgent Optional. A string that specifies the client user agent performing the request. The recommended format is {user agent name}/{version}. For example, the official DocumentDB .NET SDK sets the User-Agent string to Microsoft.Document.Client/1.0.0.0. A custom user-agent could be something like ContosoMarketingApp/1.0.0.
@@ -39,23 +39,23 @@ upsertDocuments <-
            databaseId,
            collectionId,
            documentsDataFrame,
-           partitionKey = "",
+           partitionKeyColumn = "",
            consistencyLevel = "",
            sessionToken = "",
            userAgent = "") {
 
       # ensure that id column is of type character (otherwise DocumentDB doesn't like it)
-      someDataFrame[, "id"] <- sapply(someDataFrame[, "id"], format, scientific = FALSE)
+      documentsDataFrame[, "id"] <- sapply(documentsDataFrame[, "id"], format, scientific = FALSE)
 
       # convert all factor columns to character (otherwise, the below generated JSONs will only contain index numbers)
-      isFactorColumn <- sapply(someDataFrame, is.factor)
-      someDataFrame[, isFactorColumn] <- sapply(someDataFrame[, isFactorColumn], format, scientific = FALSE)
+      isFactorColumn <- sapply(documentsDataFrame, is.factor)
+      documentsDataFrame[, isFactorColumn] <- sapply(documentsDataFrame[, isFactorColumn], format, scientific = FALSE)
 
       # assemble JSONs for each row and do the upserts
-      columnNames <- names(someDataFrame)
+      columnNames <- names(documentsDataFrame)
       requestCharge <- 0
-      for (currentRowIndex in 1:nrow(someDataFrame)) {
-          json <- as.character(jsonlite::toJSON(someDataFrame[currentRowIndex,]))
+      for (currentRowIndex in 1:nrow(documentsDataFrame)) {
+          json <- as.character(jsonlite::toJSON(documentsDataFrame[currentRowIndex,]))
           json <- gsub("(^\\[)|(\\]$)", "", json)
           singleUpsertResult <- upsertDocument(
               accountUrl = accountUrl,
@@ -63,7 +63,7 @@ upsertDocuments <-
               databaseId = databaseId,
               collectionId = collectionId,
               document = json,
-              partitionKey = partitionKey,
+              partitionKey = documentsDataFrame[currentRowIndex, partitionKeyColumn],
               consistencyLevel = consistencyLevel,
               sessionToken = sessionToken,
               userAgent = userAgent
