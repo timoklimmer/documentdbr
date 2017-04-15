@@ -2,8 +2,8 @@
 #'
 #' @param accountUrl The URI of the DocumentDB account.
 #' @param primaryOrSecondaryKey The master key to authenticate.
-#' @param databaseId The ID of the database to query.
-#' @param collectionId The ID of the collection to query.
+#' @param databaseId The ID of the database to modify.
+#' @param collectionId The ID of the collection to modify.
 #' @param document Either a JSON document (jsonlite) or JSON string denoting the document to add or update.
 #' @param partitionKey Optional. The partition key value pointing to the partition where the document is (to be) stored.
 #' @param consistencyLevel Optional. The consistency level override. The valid values are: Strong, Bounded, Session, or Eventual (in order of strongest to weakest). The override must be the same or weaker than the account's configured consistency level.
@@ -20,8 +20,8 @@
 #'   upsertDocument(
 #'     accountUrl = "https://somedocumentdbaccount.documents.azure.com",
 #'     primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-#'     databaseId = "ToDoList",
-#'     collectionId = "Items",
+#'     databaseId = "MyDatabaseId",
+#'     collectionId = "MyCollectionId",
 #'     document = toJSON("{\"id\": \"fe7718ad-0000-4f42-cf5a-e2d79d2156df\", \"Value\": \"126\"}")
 #'   )
 #' print(upsertResult$requestCharge)

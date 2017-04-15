@@ -1,4 +1,4 @@
-#' Queries a single document from a collection.
+#' Gets a single document from a collection.
 #'
 #' @param accountUrl The URI of the DocumentDB account.
 #' @param primaryOrSecondaryKey The master key to authenticate.
@@ -14,19 +14,19 @@
 #' @export
 #'
 #' @examples
-#' # queries a single document
-#' queryResult <-
-#'   selectSingleDocument(
+#' # gets a single document with a specified id
+#' getResult <-
+#'   getDocument(
 #'     accountUrl = "https://somedocumentdbaccount.documents.azure.com",
 #'     primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-#'     databaseId = "ToDoList",
-#'     collectionId = "Items",
+#'     databaseId = "MyDatabaseId",
+#'     collectionId = "MyCollectionId",
 #'     documentId = "3c7718ab-858b-4f42-bf5a-e2d79d2156de"
 #'   )
-#' str(queryResult$document)
-#' print(queryResult$document)
-#' print(queryResult$requestCharge)
-selectSingleDocument <-
+#' str(getResult$document)
+#' print(getResult$document)
+#' print(getResult$requestCharge)
+getDocument <-
   function(accountUrl,
            primaryOrSecondaryKey,
            databaseId,

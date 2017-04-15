@@ -2,7 +2,7 @@
 % Please edit documentation in R/deleteDocument.R
 \name{deleteDocument}
 \alias{deleteDocument}
-\title{Deletes a document from a collection.}
+\title{Deletes a single document from a collection.}
 \usage{
 deleteDocument(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
   documentId, partitionKey = "", consistencyLevel = "", sessionToken = "",
@@ -31,7 +31,7 @@ deleteDocument(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
 Some information extracted from the REST API response such as request charge and session token.
 }
 \description{
-Deletes a document from a collection.
+Deletes a single document from a collection.
 }
 \examples{
 # deletes the document with id fe7718ad-0000-4f42-cf5a-e2d79d2156df
@@ -40,8 +40,8 @@ deleteResult <-
   deleteDocument(
     accountUrl = "https://somedocumentdbaccount.documents.azure.com",
     primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-    databaseId = "ToDoList",
-    collectionId = "Items",
+    databaseId = "MyDatabaseId",
+    collectionId = "MyCollectionId",
     documentId = "fe7718ad-0000-4f42-cf5a-e2d79d2156df"
   )
 print(deleteResult$requestCharge)

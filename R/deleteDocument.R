@@ -1,4 +1,4 @@
-#' Deletes a document from a collection.
+#' Deletes a single document from a collection.
 #'
 #' @param accountUrl The URI of the DocumentDB account.
 #' @param primaryOrSecondaryKey The master key to authenticate.
@@ -20,8 +20,8 @@
 #'   deleteDocument(
 #'     accountUrl = "https://somedocumentdbaccount.documents.azure.com",
 #'     primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-#'     databaseId = "ToDoList",
-#'     collectionId = "Items",
+#'     databaseId = "MyDatabaseId",
+#'     collectionId = "MyCollectionId",
 #'     documentId = "fe7718ad-0000-4f42-cf5a-e2d79d2156df"
 #'   )
 #' print(deleteResult$requestCharge)

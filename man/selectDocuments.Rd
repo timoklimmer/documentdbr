@@ -2,7 +2,7 @@
 % Please edit documentation in R/selectDocuments.R
 \name{selectDocuments}
 \alias{selectDocuments}
-\title{Queries a collection for documents.}
+\title{Runs a SELECT query on a collection and returns its result as data.frame.}
 \usage{
 selectDocuments(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
   queryText, enableCrossPartitionQuery = FALSE, partitionKey = "",
@@ -36,7 +36,7 @@ selectDocuments(accountUrl, primaryOrSecondaryKey, databaseId, collectionId,
 The result of the query as data.frame object and some information extracted from the REST API response such as request charge and session token.
 }
 \description{
-Queries a collection for documents.
+Runs a SELECT query on a collection and returns its result as data.frame.
 }
 \examples{
 # returns the result of a SQL query as data.frame
@@ -45,12 +45,25 @@ queryResult <-
   selectDocuments(
     accountUrl = "https://somedocumentdbaccount.documents.azure.com",
     primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-    databaseId = "ToDoList",
-    collectionId = "Items",
+    databaseId = "MyDatabaseId",
+    collectionId = "MyCollectionId",
     queryText = "SELECT Items.name, Items.description, Items.isComplete FROM Items WHERE Items.isComplete = true",
     maxItemsPerChunk = 100
   )
 str(queryResult$documents)
 print(queryResult$documents)
 print(queryResult$requestCharge)
+
+# returns the sum of all value1 fields
+library(documentdbr)
+anotherQueryResult <-
+ selectDocuments(
+   accountUrl = "https://somedocumentdbaccount.documents.azure.com",
+   primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
+   databaseId = "MyDatabaseId",
+   collectionId = "MyCollectionId",
+   queryText = "SELECT sum(c.value1) AS TotalSumValue1 FROM c"
+ )
+totalSumValue1 <- as.numeric(anotherQueryResult$documents)
+print(paste("The total sum over all value1 fields is:", totalSumValue1))
 }

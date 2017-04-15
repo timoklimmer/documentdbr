@@ -1,4 +1,4 @@
-#' Queries a collection for documents.
+#' Runs a SELECT query on a collection and returns its result as data.frame.
 #'
 #' @param accountUrl The URI of the DocumentDB account.
 #' @param primaryOrSecondaryKey The master key to authenticate.
@@ -22,14 +22,27 @@
 #'   selectDocuments(
 #'     accountUrl = "https://somedocumentdbaccount.documents.azure.com",
 #'     primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
-#'     databaseId = "ToDoList",
-#'     collectionId = "Items",
+#'     databaseId = "MyDatabaseId",
+#'     collectionId = "MyCollectionId",
 #'     queryText = "SELECT Items.name, Items.description, Items.isComplete FROM Items WHERE Items.isComplete = true",
 #'     maxItemsPerChunk = 100
 #'   )
 #' str(queryResult$documents)
 #' print(queryResult$documents)
 #' print(queryResult$requestCharge)
+#' 
+#' # returns the sum of all value1 fields
+#' library(documentdbr)
+#' anotherQueryResult <-
+#'  selectDocuments(
+#'    accountUrl = "https://somedocumentdbaccount.documents.azure.com",
+#'    primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
+#'    databaseId = "MyDatabaseId",
+#'    collectionId = "MyCollectionId",
+#'    queryText = "SELECT sum(c.value1) AS TotalSumValue1 FROM c"
+#'  )
+#' totalSumValue1 <- as.numeric(anotherQueryResult$documents)
+#' print(paste("The total sum over all value1 fields is:", totalSumValue1))
 selectDocuments <-
   function(accountUrl,
            primaryOrSecondaryKey,
