@@ -9,7 +9,7 @@ selectDocuments(connectionInfo, queryText, enableCrossPartitionQuery = FALSE,
   sessionToken = "", userAgent = "")
 }
 \arguments{
-\item{connectionInfo}{A DocumentDB connection info object generated with getDocumentDbConnectionInfo().}
+\item{connectionInfo}{A DocumentDB connection info object generated with getDocumentDBConnectionInfo().}
 
 \item{queryText}{The SQL query to execute.}
 
@@ -35,8 +35,8 @@ Runs a SELECT query on a collection and returns its result as data.frame.
 # load the documentdbr package
 library(documentdbr)
 
-# get a DocumentDbConnectionInfo object
-myCollection <- getDocumentDbConnectionInfo(
+# get a DocumentDBConnectionInfo object
+myCollection <- getDocumentDBConnectionInfo(
   accountUrl = "https://somedocumentdbaccount.documents.azure.com",
   primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
   databaseId = "MyDatabaseId",

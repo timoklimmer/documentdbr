@@ -1,6 +1,6 @@
 #' Inserts or updates the specified JSON document into a collection.
 #'
-#' @param connectionInfo A DocumentDB connection info object generated with getDocumentDbConnectionInfo().
+#' @param connectionInfo A DocumentDB connection info object generated with getDocumentDBConnectionInfo().
 #' @param document Either a JSON document (jsonlite) or JSON string denoting the document to add or update.
 #' @param partitionKey Optional. The partition key value pointing to the partition where the document is (to be) stored.
 #' @param consistencyLevel Optional. The consistency level override. The valid values are: Strong, Bounded, Session, or Eventual (in order of strongest to weakest). The override must be the same or weaker than the account's configured consistency level.
@@ -14,8 +14,8 @@
 #' # load the documentdbr package
 #' library(documentdbr)
 #' 
-#' # get a DocumentDbConnectionInfo object
-#' myCollection <- getDocumentDbConnectionInfo(
+#' # get a DocumentDBConnectionInfo object
+#' myCollection <- getDocumentDBConnectionInfo(
 #'   accountUrl = "https://somedocumentdbaccount.documents.azure.com",
 #'   primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
 #'   databaseId = "MyDatabaseId",
@@ -34,8 +34,8 @@ upsertDocument <-
            userAgent = "") {
 
       # initialization
-      collectionResourceLink <- paste0("dbs/", connectionInfo$databaseId, "/colls/", connectionInfo$collectionId)
-      postUrl <- paste0(connectionInfo$accountUrl, "/", collectionResourceLink, "/docs")
+      resourceLink <- paste0("dbs/", connectionInfo$databaseId, "/colls/", connectionInfo$collectionId)
+      postUrl <- paste0(connectionInfo$accountUrl, "/", resourceLink, "/docs")
       requestCharge <- 0
 
       # prepare POST call
@@ -43,7 +43,7 @@ upsertDocument <-
       authorizationToken <- generateAuthToken(
           verb = "POST",
           resourceType = "docs",
-          resourceLink = collectionResourceLink,
+          resourceLink = resourceLink,
           date = currentHttpDate,
           key = connectionInfo$primaryOrSecondaryKey,
           keyType = "master",

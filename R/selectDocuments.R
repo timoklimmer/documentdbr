@@ -1,6 +1,6 @@
 #' Runs a SELECT query on a collection and returns its result as data.frame.
 #'
-#' @param connectionInfo A DocumentDB connection info object generated with getDocumentDbConnectionInfo().
+#' @param connectionInfo A DocumentDB connection info object generated with getDocumentDBConnectionInfo().
 #' @param queryText The SQL query to execute.
 #' @param enableCrossPartitionQuery Optional. If the collection is partitioned, this must be set to TRUE to allow execution across multiple partitions. Queries that filter against a single partition key, or against single-partitioned collections do not need to set this parameter. Default value is FALSE.
 #' @param partitionKey Optional. Needs to be set if the collection is partitioned and the cross partition query option is disabled.
@@ -16,8 +16,8 @@
 #' # load the documentdbr package
 #' library(documentdbr)
 #' 
-#' # get a DocumentDbConnectionInfo object
-#' myCollection <- getDocumentDbConnectionInfo(
+#' # get a DocumentDBConnectionInfo object
+#' myCollection <- getDocumentDBConnectionInfo(
 #'   accountUrl = "https://somedocumentdbaccount.documents.azure.com",
 #'   primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
 #'   databaseId = "MyDatabaseId",
@@ -44,8 +44,8 @@ selectDocuments <-
            userAgent = "") {
 
     # initialization
-    collectionResourceLink <- paste0("dbs/", connectionInfo$databaseId, "/colls/", connectionInfo$collectionId)
-    postUrl <- paste0(connectionInfo$accountUrl, "/", collectionResourceLink, "/docs")
+    resourceLink <- paste0("dbs/", connectionInfo$databaseId, "/colls/", connectionInfo$collectionId)
+    postUrl <- paste0(connectionInfo$accountUrl, "/", resourceLink, "/docs")
     content <- paste0("{\"query\":\"", escapeTextForJson(queryText), "\"}")
     requestCharge <- 0
     enableCrossPartitionQuery <- tolower(as.character(enableCrossPartitionQuery))
@@ -63,7 +63,7 @@ selectDocuments <-
         authorizationToken <- generateAuthToken(
             verb = "POST",
             resourceType = "docs",
-            resourceLink = collectionResourceLink,
+            resourceLink = resourceLink,
             date = currentHttpDate,
             key = connectionInfo$primaryOrSecondaryKey,
             keyType = "master",

@@ -1,6 +1,6 @@
 #' Interprets the rows in a specified data.frame as documents and upserts those documents.
 #'
-#' @param connectionInfo A DocumentDB connection info object generated with getDocumentDbConnectionInfo().
+#' @param connectionInfo A DocumentDB connection info object generated with getDocumentDBConnectionInfo().
 #' @param documentsDataFrame A data.frame containing the documents. Ensure that the data.frame has an id column.
 #' @param partitionKeyColumn Optional. Name of the column which contains the partition key. The partition key points to the partition where the documents are (to be) stored.
 #' @param consistencyLevel Optional. The consistency level override. The valid values are: Strong, Bounded, Session, or Eventual (in order of strongest to weakest). The override must be the same or weaker than the account's configured consistency level.
@@ -14,8 +14,8 @@
 #' # load the documentdbr package
 #' library(documentdbr)
 #' 
-#' # get a DocumentDbConnectionInfo object
-#' myCollection <- getDocumentDbConnectionInfo(
+#' # get a DocumentDBConnectionInfo object
+#' myCollection <- getDocumentDBConnectionInfo(
 #'   accountUrl = "https://somedocumentdbaccount.documents.azure.com",
 #'   primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
 #'   databaseId = "MyDatabaseId",

@@ -2,7 +2,7 @@
 #'
 #' Note: As this function deletes each document one by one, it can take very long to do the deletions. In some cases, it is a better approach to delete and recreate the collection.
 #'
-#' @param connectionInfo A DocumentDB connection info object generated with getDocumentDbConnectionInfo().
+#' @param connectionInfo A DocumentDB connection info object generated with getDocumentDBConnectionInfo().
 #' @param predicate Optional. The predicate which has to be satisfied. Example: "c.machineId IN ('Machine 1', 'Machine 2')" deletes all documents of machine 1 and 2. Default is "", ie. all documents in the collection are deleted.
 #' @param partitionKey Optional. Can be used to limit the operation to a certain partition.
 #' @param consistencyLevel Optional. The consistency level override. The valid values are: Strong, Bounded, Session, or Eventual (in order of strongest to weakest). The override must be the same or weaker than the account's configured consistency level.
@@ -16,8 +16,8 @@
 #' # load the documentdbr package
 #' library(documentdbr)
 #' 
-#' # get a DocumentDbConnectionInfo object
-#' myCollection <- getDocumentDbConnectionInfo(
+#' # get a DocumentDBConnectionInfo object
+#' myCollection <- getDocumentDBConnectionInfo(
 #'   accountUrl = "https://somedocumentdbaccount.documents.azure.com",
 #'   primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
 #'   databaseId = "MyDatabaseId",

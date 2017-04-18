@@ -2,25 +2,25 @@
 #'
 #' @param accountUrl The URI of the DocumentDB account.
 #' @param primaryOrSecondaryKey The master key to authenticate.
-#' @param databaseId The ID of the database to query/modify.
-#' @param collectionId The ID of the collection to query/modify.
+#' @param databaseId Optional. The ID of the database to work with. Not needed if operations are on account level.
+#' @param collectionId Optional. The ID of the collection to work with. Not needed if operations are on database level.
 #'
 #' @return An object that can be passed to other functions of this package.
 #' @export
 #'
 #' @examples
-#' # get a DocumentDbConnectionInfo object
-#' myDocDB <- getDocumentDbConnectionInfo(
+#' # get a DocumentDBConnectionInfo object
+#' myDocDB <- getDocumentDBConnectionInfo(
 #'   accountUrl = "https://somedocumentdbaccount.documents.azure.com",
 #'   primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
 #'   databaseId = "MyDatabaseId",
 #'   collectionId = "MyCollectionId"
 #' )
-getDocumentDbConnectionInfo <- function(
+getDocumentDBConnectionInfo <- function(
   accountUrl,
   primaryOrSecondaryKey,
-  databaseId,
-  collectionId
+  databaseId = "",
+  collectionId = ""
 ) {
     list(
         accountUrl = accountUrl,

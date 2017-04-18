@@ -1,4 +1,15 @@
-﻿documentdbr v0.7.0 (Release date: 2017-04-14)
+﻿documentdbr v0.8.0 (Release date: 2017-04-18)
+=============================================
+
+Changes:
+
+* Added functions to create, delete and check existence of databases and collections.
+* Added a function to check if a document with a certain ID exists.
+* Bugfix: GetDocument() not working.
+* Smaller documentation changes.
+
+
+documentdbr v0.7.0 (Release date: 2017-04-14)
 =============================================
 
 Changes:

@@ -8,7 +8,7 @@ deleteDocuments(connectionInfo, predicate = "", partitionKey = "",
   consistencyLevel = "", sessionToken = "", userAgent = "")
 }
 \arguments{
-\item{connectionInfo}{A DocumentDB connection info object generated with getDocumentDbConnectionInfo().}
+\item{connectionInfo}{A DocumentDB connection info object generated with getDocumentDBConnectionInfo().}
 
 \item{predicate}{Optional. The predicate which has to be satisfied. Example: "c.machineId IN ('Machine 1', 'Machine 2')" deletes all documents of machine 1 and 2. Default is "", ie. all documents in the collection are deleted.}
 
@@ -30,8 +30,8 @@ Note: As this function deletes each document one by one, it can take very long t
 # load the documentdbr package
 library(documentdbr)
 
-# get a DocumentDbConnectionInfo object
-myCollection <- getDocumentDbConnectionInfo(
+# get a DocumentDBConnectionInfo object
+myCollection <- getDocumentDBConnectionInfo(
   accountUrl = "https://somedocumentdbaccount.documents.azure.com",
   primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
   databaseId = "MyDatabaseId",

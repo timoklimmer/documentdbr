@@ -1,6 +1,6 @@
 Package: documentdbr
 Title: Use Azure DocumentDB from R
-Version: 0.7.0
+Version: 0.8.0
 Authors@R: person("Timo", "Klimmer", email = "timo.klimmer@microsoft.com", role = c("aut", "cre", "cph"))
 Description: This package provides several functions to use Azure DocumentDB from R.
 Depends: R (>= 3.3.2)

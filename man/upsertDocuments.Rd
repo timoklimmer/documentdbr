@@ -8,7 +8,7 @@ upsertDocuments(connectionInfo, documentsDataFrame, partitionKeyColumn = "",
   consistencyLevel = "", sessionToken = "", userAgent = "")
 }
 \arguments{
-\item{connectionInfo}{A DocumentDB connection info object generated with getDocumentDbConnectionInfo().}
+\item{connectionInfo}{A DocumentDB connection info object generated with getDocumentDBConnectionInfo().}
 
 \item{documentsDataFrame}{A data.frame containing the documents. Ensure that the data.frame has an id column.}
 
@@ -30,8 +30,8 @@ Interprets the rows in a specified data.frame as documents and upserts those doc
 # load the documentdbr package
 library(documentdbr)
 
-# get a DocumentDbConnectionInfo object
-myCollection <- getDocumentDbConnectionInfo(
+# get a DocumentDBConnectionInfo object
+myCollection <- getDocumentDBConnectionInfo(
   accountUrl = "https://somedocumentdbaccount.documents.azure.com",
   primaryOrSecondaryKey = "t0C36UstTJ4c6vdkFyImkaoB6L1yeQidadg6wasSwmaK2s8JxFbEXQ0e3AW9KE1xQqmOn0WtOi3lxloStmSeeg==",
   databaseId = "MyDatabaseId",
