@@ -71,7 +71,7 @@ selectDocuments <-
           )
 
         # do REST call
-        response <- httr::POST(
+      response <- httr::POST(
             postUrl,
             httr::add_headers(
               "Content-Type" = "application/query+json",
@@ -91,10 +91,19 @@ selectDocuments <-
             body = content
             #, verbose()
           )
-
+        # log status code
+        print(paste0("Request status code: ", response$status_code))
         # process response
         completeResultFromJson <- jsonlite::fromJSON(httr::content(response, "text", encoding = "UTF-8"))
-        if (floor(response$status_code / 100) != 2) {
+        # handle 429 responses by retrieving wait time from response header and pausing
+        if (response$status_code == 429) {
+          # get retry wait time and pause
+          waitTime <- response$headers$`x-ms-retry-after-ms`
+          print(paste0("Waiting for ", waitTime, "ms to retry request"))
+          if (!is.null(waitTime)) {
+            Sys.sleep(as.numeric(waitTime) / 1000)
+          }
+        } else if (floor(response$status_code / 100) != 2 && response$status_code != 429) {
             # error
             # stop with an error message
             errorMessage <- paste0(
@@ -103,21 +112,23 @@ selectDocuments <-
           )
             stop(errorMessage)
         } else {
-            # no error
+          # no error
 
-            # get intermediate result, request charge and session token and append it to total result
-            intermediateResult <- completeResultFromJson$Documents
-            intermediateResourceUsage <-
-              if (is.null(totalDocuments)) {
-                totalDocuments <- intermediateResult
-              } else {
-                totalDocuments <- plyr::rbind.fill(totalDocuments, intermediateResult)
+          # get intermediate result, request charge and session token and append it to total result
+          intermediateResult <- completeResultFromJson$Documents
+          if (is.data.frame(intermediateResult)) { # check that the chunk contains data
+            if (is.null(totalDocuments)) {
+              totalDocuments <- intermediateResult
+            } else {
+              totalDocuments <- plyr::rbind.fill(totalDocuments, intermediateResult)
             }
-            requestCharge <- requestCharge + as.numeric(response$headers$`x-ms-request-charge`)
-            sessionToken <- response$headers$`x-ms-session-token`
+          }
+          requestCharge <- requestCharge + as.numeric(response$headers$`x-ms-request-charge`)
+          sessionToken <- response$headers$`x-ms-session-token`
 
-            # get continuation token for the while loop to check if there is other page(s) we have to process
-            msContinuation <- response$headers$`x-ms-continuation`
+          # get continuation token for the while loop to check if there is other page(s) we have to process
+          msContinuation <- response$headers$`x-ms-continuation`
+
         }
 
         # unflag isFirstLoop
