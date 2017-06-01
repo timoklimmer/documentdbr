@@ -111,7 +111,7 @@ selectDocuments <-
               if (is.null(totalDocuments)) {
                 totalDocuments <- intermediateResult
               } else {
-                totalDocuments <- rbind(totalDocuments, intermediateResult)
+                totalDocuments <- plyr::rbind.fill(totalDocuments, intermediateResult)
             }
             requestCharge <- requestCharge + as.numeric(response$headers$`x-ms-request-charge`)
             sessionToken <- response$headers$`x-ms-session-token`
