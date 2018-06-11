@@ -13,7 +13,7 @@
 #' @examples
 #' # load the documentdbr package
 #' library(documentdbr)
-#' 
+#'
 #' # get a DocumentDBConnectionInfo object
 #' myCollection <- getDocumentDBConnectionInfo(
 #'   accountUrl = "https://somedocumentdbaccount.documents.azure.com",
@@ -88,7 +88,7 @@ getDocument <-
         # no error
 
         # get document, request charge and session token
-        document <- data.frame(completeResultFromJson)
+        document <- completeResultFromJson
         requestCharge <- as.numeric(response$headers$`x-ms-request-charge`)
         sessionToken <- response$headers$`x-ms-session-token`
     }
